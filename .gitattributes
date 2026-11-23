@@ -1,0 +1,2 @@
+# Drizzle hashes the exact bytes of each applied migration.
+drizzle/*.sql -text whitespace=cr-at-eol

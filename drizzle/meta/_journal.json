@@ -8,6 +8,97 @@
       "when": 1794342083592,
       "tag": "0000_cloudy_guardsmen",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795210193660,
+      "tag": "0001_square_sentinels",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795274412100,
+      "tag": "0002_chat",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795277905882,
+      "tag": "0003_perfiles_marca",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795296329266,
+      "tag": "0004_identidad_visual",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1795297371158,
+      "tag": "0005_enriquecimientos_post",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1795300693892,
+      "tag": "0006_competidores",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1795301461478,
+      "tag": "0007_ingesta_competidores",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1795306604402,
+      "tag": "0008_tendencias",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1795307606932,
+      "tag": "0009_cache_tendencias",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1795457618966,
+      "tag": "0010_banco_ideas",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795458334191,
+      "tag": "0011_reservas_generador_ideas",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1795459357833,
+      "tag": "0012_evaluaciones_ideas",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1795460138417,
+      "tag": "0013_diagnosticos_ideas",
+      "breakpoints": true
     }
   ]
 }

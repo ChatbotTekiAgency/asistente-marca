@@ -2,6 +2,7 @@
 import "server-only";
 
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -14,6 +15,8 @@ import { verifySession } from "@/lib/auth/session";
 // =====================================================
 
 export async function getCuentaActiva() {
+  // La expiración de la sesión se verifica con la hora de la solicitud.
+  await connection();
   // 1. Verificar primero la sesión de acceso
   const session = await verifySession();
 
@@ -41,7 +44,7 @@ export async function getCuentaActiva() {
 
   // 4. Consultar la cuenta en Neon mediante Drizzle
   const [cuenta] = await db
-    .select()
+    .select({ id: cuentas.id, username: cuentas.username })
     .from(cuentas)
     .where(eq(cuentas.id, validation.data))
     .limit(1);

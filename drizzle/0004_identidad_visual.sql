@@ -1,0 +1,2 @@
+ALTER TABLE "perfiles_marca" ADD COLUMN "identidad_visual" jsonb DEFAULT '{}'::jsonb NOT NULL;--> statement-breakpoint
+ALTER TABLE "perfiles_marca" ADD CONSTRAINT "perfiles_marca_identidad_visual_objeto" CHECK (jsonb_typeof("perfiles_marca"."identidad_visual") = 'object');

@@ -1,0 +1,13 @@
+[
+  {
+    "id": "101", "shortCode": "Rival_1", "type": "Image", "caption": "Publicación sintética",
+    "url": "https://www.instagram.com/p/Rival_1/", "timestamp": "2026-02-17T17:00:00.000Z",
+    "ownerUsername": "rival_prueba", "hashtags": ["prueba"], "likesCount": -1,
+    "commentsCount": 0, "latestComments": [{ "text": "Texto sintético que debe descartarse" }]
+  },
+  {
+    "id": "102", "shortCode": "Rival_2", "type": "Video", "caption": "Segundo ejemplo",
+    "url": "https://www.instagram.com/reel/Rival_2/", "timestamp": "2026-02-18T17:00:00.000Z",
+    "ownerUsername": "rival_prueba", "likesCount": 5, "commentsCount": 2, "videoPlayCount": 10
+  }
+]

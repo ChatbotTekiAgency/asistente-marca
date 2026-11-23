@@ -1,0 +1,2424 @@
+{
+  "id": "7006a669-750c-47ac-b488-1453ac4bcd9a",
+  "prevId": "4da135f0-8bb0-4fbf-8756-22faf833901e",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.competidores": {
+      "name": "competidores",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "cuenta_id": {
+          "name": "cuenta_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "generated": {
+            "as": "'https://www.instagram.com/' || \"username\" || '/'",
+            "type": "stored"
+          }
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "activo": {
+          "name": "activo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "cupo": {
+          "name": "cupo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revision": {
+          "name": "revision",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "competidores_cuenta_username_idx": {
+          "name": "competidores_cuenta_username_idx",
+          "columns": [
+            {
+              "expression": "cuenta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "username",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "competidores_cuenta_cupo_idx": {
+          "name": "competidores_cuenta_cupo_idx",
+          "columns": [
+            {
+              "expression": "cuenta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "cupo",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "competidores_cuenta_id_cuentas_id_fk": {
+          "name": "competidores_cuenta_id_cuentas_id_fk",
+          "tableFrom": "competidores",
+          "tableTo": "cuentas",
+          "columnsFrom": [
+            "cuenta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "competidores_username_normalizado": {
+          "name": "competidores_username_normalizado",
+          "value": "\"competidores\".\"username\" ~ '^[a-z0-9._]{1,30}$'"
+        },
+        "competidores_estado_cupo": {
+          "name": "competidores_estado_cupo",
+          "value": "(\"competidores\".\"activo\" = (\"competidores\".\"cupo\" IS NOT NULL)) AND (\"competidores\".\"cupo\" BETWEEN 1 AND 5 OR \"competidores\".\"cupo\" IS NULL)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.conversaciones": {
+      "name": "conversaciones",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "cuenta_id": {
+          "name": "cuenta_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "creada_en": {
+          "name": "creada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "actualizada_en": {
+          "name": "actualizada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "intento_activo": {
+          "name": "intento_activo",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reserva_hasta": {
+          "name": "reserva_hasta",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "conversaciones_cuenta_actualizada_idx": {
+          "name": "conversaciones_cuenta_actualizada_idx",
+          "columns": [
+            {
+              "expression": "cuenta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "actualizada_en",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "conversaciones_cuenta_id_cuentas_id_fk": {
+          "name": "conversaciones_cuenta_id_cuentas_id_fk",
+          "tableFrom": "conversaciones",
+          "tableTo": "cuentas",
+          "columnsFrom": [
+            "cuenta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "conversaciones_reserva_completa": {
+          "name": "conversaciones_reserva_completa",
+          "value": "(\"conversaciones\".\"intento_activo\" IS NULL) = (\"conversaciones\".\"reserva_hasta\" IS NULL)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.cuentas": {
+      "name": "cuentas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "ig_user_id": {
+          "name": "ig_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "access_token_cifrado": {
+          "name": "access_token_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "token_expira_en": {
+          "name": "token_expira_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "apify_reservada_hasta": {
+          "name": "apify_reservada_hasta",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "perfil_marca": {
+          "name": "perfil_marca",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creada_en": {
+          "name": "creada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "actualizada_en": {
+          "name": "actualizada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "cuentas_ig_user_id_unique": {
+          "name": "cuentas_ig_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "ig_user_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cuotas_chat": {
+      "name": "cuotas_chat",
+      "schema": "",
+      "columns": {
+        "cuenta_id": {
+          "name": "cuenta_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dia": {
+          "name": "dia",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "solicitudes": {
+          "name": "solicitudes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "cuotas_chat_cuenta_id_cuentas_id_fk": {
+          "name": "cuotas_chat_cuenta_id_cuentas_id_fk",
+          "tableFrom": "cuotas_chat",
+          "tableTo": "cuentas",
+          "columnsFrom": [
+            "cuenta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "cuotas_chat_cuenta_id_dia_pk": {
+          "name": "cuotas_chat_cuenta_id_dia_pk",
+          "columns": [
+            "cuenta_id",
+            "dia"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "cuotas_chat_solicitudes_positivas": {
+          "name": "cuotas_chat_solicitudes_positivas",
+          "value": "\"cuotas_chat\".\"solicitudes\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.enriquecimientos_post": {
+      "name": "enriquecimientos_post",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "post_id": {
+          "name": "post_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version_esquema": {
+          "name": "version_esquema",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version_prompt": {
+          "name": "version_prompt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proveedor": {
+          "name": "proveedor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "modelo": {
+          "name": "modelo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "modalidad": {
+          "name": "modalidad",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hash_contenido": {
+          "name": "hash_contenido",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "estado": {
+          "name": "estado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "intento": {
+          "name": "intento",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vence_en": {
+          "name": "vence_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clasificacion": {
+          "name": "clasificacion",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uso": {
+          "name": "uso",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "analizado_en": {
+          "name": "analizado_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "enriquecimientos_identidad_idx": {
+          "name": "enriquecimientos_identidad_idx",
+          "columns": [
+            {
+              "expression": "post_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "version_esquema",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "version_prompt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "proveedor",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "modelo",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "modalidad",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "hash_contenido",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "enriquecimientos_post_fecha_idx": {
+          "name": "enriquecimientos_post_fecha_idx",
+          "columns": [
+            {
+              "expression": "post_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "analizado_en",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "enriquecimientos_post_post_id_posts_id_fk": {
+          "name": "enriquecimientos_post_post_id_posts_id_fk",
+          "tableFrom": "enriquecimientos_post",
+          "tableTo": "posts",
+          "columnsFrom": [
+            "post_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "enriquecimientos_proveedor_valido": {
+          "name": "enriquecimientos_proveedor_valido",
+          "value": "\"enriquecimientos_post\".\"proveedor\" IN ('mock','anthropic')"
+        },
+        "enriquecimientos_modalidad_valida": {
+          "name": "enriquecimientos_modalidad_valida",
+          "value": "\"enriquecimientos_post\".\"modalidad\" IN ('texto','visual')"
+        },
+        "enriquecimientos_estado_valido": {
+          "name": "enriquecimientos_estado_valido",
+          "value": "\"enriquecimientos_post\".\"estado\" IN ('en_curso','completado','fallido')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.fuentes_tendencias": {
+      "name": "fuentes_tendencias",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "tendencia_id": {
+          "name": "tendencia_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "posicion": {
+          "name": "posicion",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sitio": {
+          "name": "sitio",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "publicada_el": {
+          "name": "publicada_el",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "tendencias_fuente_posicion_idx": {
+          "name": "tendencias_fuente_posicion_idx",
+          "columns": [
+            {
+              "expression": "tendencia_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "posicion",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tendencias_fuente_url_idx": {
+          "name": "tendencias_fuente_url_idx",
+          "columns": [
+            {
+              "expression": "tendencia_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "fuentes_tendencias_tendencia_id_resultados_tendencias_id_fk": {
+          "name": "fuentes_tendencias_tendencia_id_resultados_tendencias_id_fk",
+          "tableFrom": "fuentes_tendencias",
+          "tableTo": "resultados_tendencias",
+          "columnsFrom": [
+            "tendencia_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "tendencias_fuente_valida": {
+          "name": "tendencias_fuente_valida",
+          "value": "\"fuentes_tendencias\".\"posicion\" BETWEEN 1 AND 5 AND \"fuentes_tendencias\".\"url\" LIKE 'https://%'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.ingestas": {
+      "name": "ingestas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "cuenta_id": {
+          "name": "cuenta_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proveedor": {
+          "name": "proveedor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "apify_run_id": {
+          "name": "apify_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clave_origen": {
+          "name": "clave_origen",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "estado": {
+          "name": "estado",
+          "type": "estado_ingesta",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "procesadas": {
+          "name": "procesadas",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "errores": {
+          "name": "errores",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "iniciada_en": {
+          "name": "iniciada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "finalizada_en": {
+          "name": "finalizada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mensaje_error": {
+          "name": "mensaje_error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "ingestas_cuenta_origen_idx": {
+          "name": "ingestas_cuenta_origen_idx",
+          "columns": [
+            {
+              "expression": "cuenta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "proveedor",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "clave_origen",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ingestas_cuenta_apify_run_idx": {
+          "name": "ingestas_cuenta_apify_run_idx",
+          "columns": [
+            {
+              "expression": "cuenta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "apify_run_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "ingestas_cuenta_id_cuentas_id_fk": {
+          "name": "ingestas_cuenta_id_cuentas_id_fk",
+          "tableFrom": "ingestas",
+          "tableTo": "cuentas",
+          "columnsFrom": [
+            "cuenta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ingestas_competidor": {
+      "name": "ingestas_competidor",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "competidor_id": {
+          "name": "competidor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "origen": {
+          "name": "origen",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hash_dataset": {
+          "name": "hash_dataset",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "apify_run_id": {
+          "name": "apify_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "limite": {
+          "name": "limite",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "estado": {
+          "name": "estado",
+          "type": "estado_ingesta_competidor",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "procesadas": {
+          "name": "procesadas",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "errores": {
+          "name": "errores",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "iniciada_en": {
+          "name": "iniciada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "finalizada_en": {
+          "name": "finalizada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reserva_hasta": {
+          "name": "reserva_hasta",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mensaje_error": {
+          "name": "mensaje_error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "ingestas_competidor_ambito_idx": {
+          "name": "ingestas_competidor_ambito_idx",
+          "columns": [
+            {
+              "expression": "competidor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ingestas_competidor_dataset_idx": {
+          "name": "ingestas_competidor_dataset_idx",
+          "columns": [
+            {
+              "expression": "competidor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "hash_dataset",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ingestas_competidor_run_idx": {
+          "name": "ingestas_competidor_run_idx",
+          "columns": [
+            {
+              "expression": "apify_run_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ingestas_competidor_pendiente_idx": {
+          "name": "ingestas_competidor_pendiente_idx",
+          "columns": [
+            {
+              "expression": "competidor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"ingestas_competidor\".\"estado\" IN ('iniciando', 'en_curso')",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ingestas_competidor_fecha_idx": {
+          "name": "ingestas_competidor_fecha_idx",
+          "columns": [
+            {
+              "expression": "competidor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "iniciada_en",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "ingestas_competidor_competidor_id_competidores_id_fk": {
+          "name": "ingestas_competidor_competidor_id_competidores_id_fk",
+          "tableFrom": "ingestas_competidor",
+          "tableTo": "competidores",
+          "columnsFrom": [
+            "competidor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ingestas_competidor_origen_valido": {
+          "name": "ingestas_competidor_origen_valido",
+          "value": "\"ingestas_competidor\".\"origen\" IN ('archivo', 'apify')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.mensajes": {
+      "name": "mensajes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "conversacion_id": {
+          "name": "conversacion_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "solicitud_id": {
+          "name": "solicitud_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rol": {
+          "name": "rol",
+          "type": "rol_mensaje",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "partes": {
+          "name": "partes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "orden": {
+          "name": "orden",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "uso": {
+          "name": "uso",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "mensajes_solicitud_rol_idx": {
+          "name": "mensajes_solicitud_rol_idx",
+          "columns": [
+            {
+              "expression": "conversacion_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "solicitud_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "rol",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "mensajes_conversacion_orden_idx": {
+          "name": "mensajes_conversacion_orden_idx",
+          "columns": [
+            {
+              "expression": "conversacion_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "orden",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "mensajes_conversacion_id_conversaciones_id_fk": {
+          "name": "mensajes_conversacion_id_conversaciones_id_fk",
+          "tableFrom": "mensajes",
+          "tableTo": "conversaciones",
+          "columnsFrom": [
+            "conversacion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "mensajes_solicitud_requerida": {
+          "name": "mensajes_solicitud_requerida",
+          "value": "\"mensajes\".\"rol\" = 'system' OR \"mensajes\".\"solicitud_id\" IS NOT NULL"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.metricas_post": {
+      "name": "metricas_post",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "post_id": {
+          "name": "post_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ingesta_id": {
+          "name": "ingesta_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "likes": {
+          "name": "likes",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comentarios": {
+          "name": "comentarios",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reproducciones": {
+          "name": "reproducciones",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "capturada_en": {
+          "name": "capturada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "metricas_post_ingesta_idx": {
+          "name": "metricas_post_ingesta_idx",
+          "columns": [
+            {
+              "expression": "post_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ingesta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "metricas_ingesta_idx": {
+          "name": "metricas_ingesta_idx",
+          "columns": [
+            {
+              "expression": "ingesta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "metricas_post_capturada_idx": {
+          "name": "metricas_post_capturada_idx",
+          "columns": [
+            {
+              "expression": "post_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "capturada_en",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "metricas_post_post_id_posts_id_fk": {
+          "name": "metricas_post_post_id_posts_id_fk",
+          "tableFrom": "metricas_post",
+          "tableTo": "posts",
+          "columnsFrom": [
+            "post_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "metricas_post_ingesta_id_ingestas_id_fk": {
+          "name": "metricas_post_ingesta_id_ingestas_id_fk",
+          "tableFrom": "metricas_post",
+          "tableTo": "ingestas",
+          "columnsFrom": [
+            "ingesta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "metricas_no_negativas": {
+          "name": "metricas_no_negativas",
+          "value": "\"metricas_post\".\"likes\" >= 0 AND \"metricas_post\".\"comentarios\" >= 0 AND \"metricas_post\".\"reproducciones\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.metricas_post_competidor": {
+      "name": "metricas_post_competidor",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "competidor_id": {
+          "name": "competidor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "post_id": {
+          "name": "post_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ingesta_id": {
+          "name": "ingesta_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "likes": {
+          "name": "likes",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comentarios": {
+          "name": "comentarios",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reproducciones": {
+          "name": "reproducciones",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "capturada_en": {
+          "name": "capturada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "metricas_competidor_post_ingesta_idx": {
+          "name": "metricas_competidor_post_ingesta_idx",
+          "columns": [
+            {
+              "expression": "post_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ingesta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "metricas_competidor_ingesta_idx": {
+          "name": "metricas_competidor_ingesta_idx",
+          "columns": [
+            {
+              "expression": "competidor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ingesta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "metricas_competidor_capturada_idx": {
+          "name": "metricas_competidor_capturada_idx",
+          "columns": [
+            {
+              "expression": "post_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "capturada_en",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "metricas_competidor_fk_post": {
+          "name": "metricas_competidor_fk_post",
+          "tableFrom": "metricas_post_competidor",
+          "tableTo": "posts_competidor",
+          "columnsFrom": [
+            "competidor_id",
+            "post_id"
+          ],
+          "columnsTo": [
+            "competidor_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "metricas_competidor_fk_ingesta": {
+          "name": "metricas_competidor_fk_ingesta",
+          "tableFrom": "metricas_post_competidor",
+          "tableTo": "ingestas_competidor",
+          "columnsFrom": [
+            "competidor_id",
+            "ingesta_id"
+          ],
+          "columnsTo": [
+            "competidor_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "metricas_competidor_no_negativas": {
+          "name": "metricas_competidor_no_negativas",
+          "value": "\"metricas_post_competidor\".\"likes\" >= 0 AND \"metricas_post_competidor\".\"comentarios\" >= 0 AND \"metricas_post_competidor\".\"reproducciones\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.perfiles_marca": {
+      "name": "perfiles_marca",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "cuenta_id": {
+          "name": "cuenta_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "sector": {
+          "name": "sector",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "productos_servicios": {
+          "name": "productos_servicios",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "propuesta_valor": {
+          "name": "propuesta_valor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "publico_objetivo": {
+          "name": "publico_objetivo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "necesidades": {
+          "name": "necesidades",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "intereses": {
+          "name": "intereses",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "problemas": {
+          "name": "problemas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "personalidad": {
+          "name": "personalidad",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "tono": {
+          "name": "tono",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "valores": {
+          "name": "valores",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "expresiones_preferidas": {
+          "name": "expresiones_preferidas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "expresiones_evitar": {
+          "name": "expresiones_evitar",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "objetivos": {
+          "name": "objetivos",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "diferenciadores": {
+          "name": "diferenciadores",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "pilares": {
+          "name": "pilares",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'[]'::jsonb"
+        },
+        "identidad_visual": {
+          "name": "identidad_visual",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::jsonb"
+        },
+        "revision": {
+          "name": "revision",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "creada_en": {
+          "name": "creada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "actualizada_en": {
+          "name": "actualizada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "perfiles_marca_cuenta_id_cuentas_id_fk": {
+          "name": "perfiles_marca_cuenta_id_cuentas_id_fk",
+          "tableFrom": "perfiles_marca",
+          "tableTo": "cuentas",
+          "columnsFrom": [
+            "cuenta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "perfiles_marca_cuenta_id_unique": {
+          "name": "perfiles_marca_cuenta_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "cuenta_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "perfiles_marca_pilares_array": {
+          "name": "perfiles_marca_pilares_array",
+          "value": "jsonb_typeof(\"perfiles_marca\".\"pilares\") = 'array'"
+        },
+        "perfiles_marca_identidad_visual_objeto": {
+          "name": "perfiles_marca_identidad_visual_objeto",
+          "value": "jsonb_typeof(\"perfiles_marca\".\"identidad_visual\") = 'object'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.posts": {
+      "name": "posts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "cuenta_id": {
+          "name": "cuenta_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "instagram_id": {
+          "name": "instagram_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "shortcode": {
+          "name": "shortcode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "tipo_post",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "caption": {
+          "name": "caption",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hashtags": {
+          "name": "hashtags",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "ARRAY[]::text[]"
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "publicada_en": {
+          "name": "publicada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "imagen_origen_url": {
+          "name": "imagen_origen_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "imagen_persistida": {
+          "name": "imagen_persistida",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creada_en": {
+          "name": "creada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "actualizada_en": {
+          "name": "actualizada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "posts_cuenta_shortcode_idx": {
+          "name": "posts_cuenta_shortcode_idx",
+          "columns": [
+            {
+              "expression": "cuenta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "shortcode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "posts_cuenta_publicada_idx": {
+          "name": "posts_cuenta_publicada_idx",
+          "columns": [
+            {
+              "expression": "cuenta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "publicada_en",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "posts_cuenta_id_cuentas_id_fk": {
+          "name": "posts_cuenta_id_cuentas_id_fk",
+          "tableFrom": "posts",
+          "tableTo": "cuentas",
+          "columnsFrom": [
+            "cuenta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.posts_competidor": {
+      "name": "posts_competidor",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "competidor_id": {
+          "name": "competidor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "instagram_id": {
+          "name": "instagram_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "shortcode": {
+          "name": "shortcode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "tipo_post",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "caption": {
+          "name": "caption",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hashtags": {
+          "name": "hashtags",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "publicada_en": {
+          "name": "publicada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "imagen_origen_url": {
+          "name": "imagen_origen_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creada_en": {
+          "name": "creada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "actualizada_en": {
+          "name": "actualizada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "posts_competidor_shortcode_idx": {
+          "name": "posts_competidor_shortcode_idx",
+          "columns": [
+            {
+              "expression": "competidor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "shortcode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "posts_competidor_ambito_idx": {
+          "name": "posts_competidor_ambito_idx",
+          "columns": [
+            {
+              "expression": "competidor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "posts_competidor_fecha_idx": {
+          "name": "posts_competidor_fecha_idx",
+          "columns": [
+            {
+              "expression": "competidor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "publicada_en",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "posts_competidor_competidor_id_competidores_id_fk": {
+          "name": "posts_competidor_competidor_id_competidores_id_fk",
+          "tableFrom": "posts_competidor",
+          "tableTo": "competidores",
+          "columnsFrom": [
+            "competidor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.resultados_tendencias": {
+      "name": "resultados_tendencias",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "solicitud_id": {
+          "name": "solicitud_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "posicion": {
+          "name": "posicion",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "relevancia_marca": {
+          "name": "relevancia_marca",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ejemplo_aplicacion": {
+          "name": "ejemplo_aplicacion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "formato": {
+          "name": "formato",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "publico_objetivo": {
+          "name": "publico_objetivo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "relevancia": {
+          "name": "relevancia",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "investigada_en": {
+          "name": "investigada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "tendencias_resultado_posicion_idx": {
+          "name": "tendencias_resultado_posicion_idx",
+          "columns": [
+            {
+              "expression": "solicitud_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "posicion",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "resultados_tendencias_solicitud_id_solicitudes_tendencias_id_fk": {
+          "name": "resultados_tendencias_solicitud_id_solicitudes_tendencias_id_fk",
+          "tableFrom": "resultados_tendencias",
+          "tableTo": "solicitudes_tendencias",
+          "columnsFrom": [
+            "solicitud_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "tendencias_resultado_posicion_valida": {
+          "name": "tendencias_resultado_posicion_valida",
+          "value": "\"resultados_tendencias\".\"posicion\" BETWEEN 1 AND 4"
+        },
+        "tendencias_formato_valido": {
+          "name": "tendencias_formato_valido",
+          "value": "\"resultados_tendencias\".\"formato\" IN ('reel', 'carrusel', 'imagen', 'historia', 'otro')"
+        },
+        "tendencias_relevancia_valida": {
+          "name": "tendencias_relevancia_valida",
+          "value": "\"resultados_tendencias\".\"relevancia\" IN ('alto', 'medio', 'bajo')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.solicitudes_tendencias": {
+      "name": "solicitudes_tendencias",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "cuenta_id": {
+          "name": "cuenta_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clave": {
+          "name": "clave",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "estado": {
+          "name": "estado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proveedor": {
+          "name": "proveedor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "modelo": {
+          "name": "modelo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tokens_entrada": {
+          "name": "tokens_entrada",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tokens_salida": {
+          "name": "tokens_salida",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "costo_estimado_usd": {
+          "name": "costo_estimado_usd",
+          "type": "numeric(14, 8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "error": {
+          "name": "error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creada_en": {
+          "name": "creada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "vence_en": {
+          "name": "vence_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "finalizada_en": {
+          "name": "finalizada_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expira_cache_en": {
+          "name": "expira_cache_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "tendencias_cuenta_clave_idx": {
+          "name": "tendencias_cuenta_clave_idx",
+          "columns": [
+            {
+              "expression": "cuenta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "clave",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tendencias_cuenta_fecha_idx": {
+          "name": "tendencias_cuenta_fecha_idx",
+          "columns": [
+            {
+              "expression": "cuenta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "creada_en",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "solicitudes_tendencias_cuenta_id_cuentas_id_fk": {
+          "name": "solicitudes_tendencias_cuenta_id_cuentas_id_fk",
+          "tableFrom": "solicitudes_tendencias",
+          "tableTo": "cuentas",
+          "columnsFrom": [
+            "cuenta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "tendencias_proveedor_valido": {
+          "name": "tendencias_proveedor_valido",
+          "value": "\"solicitudes_tendencias\".\"proveedor\" IN ('mock', 'anthropic')"
+        },
+        "tendencias_metadatos_validos": {
+          "name": "tendencias_metadatos_validos",
+          "value": "\"solicitudes_tendencias\".\"tokens_entrada\" >= 0 AND \"solicitudes_tendencias\".\"tokens_salida\" >= 0 AND \"solicitudes_tendencias\".\"costo_estimado_usd\" >= 0"
+        },
+        "tendencias_estado_coherente": {
+          "name": "tendencias_estado_coherente",
+          "value": "\n    (\"solicitudes_tendencias\".\"estado\" = 'en_curso' AND \"solicitudes_tendencias\".\"finalizada_en\" IS NULL AND \"solicitudes_tendencias\".\"expira_cache_en\" IS NULL AND \"solicitudes_tendencias\".\"error\" IS NULL) OR\n    (\"solicitudes_tendencias\".\"estado\" = 'completada' AND \"solicitudes_tendencias\".\"finalizada_en\" IS NOT NULL AND \"solicitudes_tendencias\".\"expira_cache_en\" > \"solicitudes_tendencias\".\"finalizada_en\"\n      AND \"solicitudes_tendencias\".\"expira_cache_en\" IS NOT NULL AND \"solicitudes_tendencias\".\"error\" IS NULL) OR\n    (\"solicitudes_tendencias\".\"estado\" = 'fallida' AND \"solicitudes_tendencias\".\"finalizada_en\" IS NOT NULL AND \"solicitudes_tendencias\".\"expira_cache_en\" IS NULL\n      AND \"solicitudes_tendencias\".\"error\" IS NOT NULL AND \"solicitudes_tendencias\".\"error\" IN ('respuesta_invalida', 'proveedor', 'vencida'))\n  "
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.estado_ingesta": {
+      "name": "estado_ingesta",
+      "schema": "public",
+      "values": [
+        "completada",
+        "parcial",
+        "fallida"
+      ]
+    },
+    "public.estado_ingesta_competidor": {
+      "name": "estado_ingesta_competidor",
+      "schema": "public",
+      "values": [
+        "iniciando",
+        "en_curso",
+        "completada",
+        "parcial",
+        "fallida",
+        "cancelada",
+        "expirada"
+      ]
+    },
+    "public.rol_mensaje": {
+      "name": "rol_mensaje",
+      "schema": "public",
+      "values": [
+        "user",
+        "assistant",
+        "system"
+      ]
+    },
+    "public.tipo_post": {
+      "name": "tipo_post",
+      "schema": "public",
+      "values": [
+        "carrusel",
+        "video",
+        "imagen"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

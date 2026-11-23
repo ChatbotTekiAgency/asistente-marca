@@ -1,4 +1,7 @@
 
+import { Suspense } from "react";
+import { Publicaciones } from "./publicaciones";
+
 export default function DashboardPage() {
   return (
     <div className="space-y-10">
@@ -56,17 +59,11 @@ export default function DashboardPage() {
 
       </section>
 
-      {/* Bienvenida */}
-      <section className="rounded-xl border border-white/10 bg-zinc-900 p-6">
-        <h2 className="text-lg font-semibold text-white">
-          Bienvenido
-        </h2>
-
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-zinc-400">
-          Este es el panel principal de TekiAgency.
-          Desde aquí podrás gestionar las herramientas
-          y funcionalidades de tu asistente.
-        </p>
+      <section aria-labelledby="publicaciones" className="space-y-4">
+        <h2 id="publicaciones" className="text-xl font-semibold text-white">Publicaciones de Instagram</h2>
+        <Suspense fallback={<p className="text-zinc-400">Cargando publicaciones…</p>}>
+          <Publicaciones />
+        </Suspense>
       </section>
 
     </div>

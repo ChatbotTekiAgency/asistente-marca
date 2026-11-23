@@ -34,6 +34,9 @@ jobs:
       - name: Check TypeScript
         run: npx tsc --noEmit
 
+      - name: Run tests
+        run: npm test
+
       - name: Build Next.js
         run: npm run build
         env:
@@ -41,5 +44,5 @@ jobs:
           ACCESS_KEY: "ci-placeholder-access-key-000000000000"
           SESSION_SECRET: "ci-placeholder-session-secret-000000000000"
           ENCRYPTION_KEY: "ci-placeholder-encryption-key"
-          ANTHROPIC_API_KEY: "ci-placeholder-anthropic-key"
+          AI_PROVIDER: "mock"
           CRON_SECRET: "ci-placeholder-cron-secret-000000000000"
